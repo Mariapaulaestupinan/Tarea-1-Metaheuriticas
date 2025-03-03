@@ -1,6 +1,62 @@
-Heuristica constructiva para el problema de ruteo en arcos capacitado 
-Pseudocodigo para la funcion de construccion de rutas
+# **Heurística constructiva para el problema de ruteo en arcos capacitado** 
+## **Indice de funciones**  
+1. [dijkstra_mas_corto](#dijkstra_mas_corto) - Encuentra el camino más corto en un grafo ponderado utilizando el algoritmo de Dijkstra. 
+2. [encontrar_arco_mas_cercano](#encontrar_arco_mas_cercano) - Encuentra el arco mas cercano al nodo actual basado en el menor costo
+3. [construir_ruta](#construir_ruta) - Construye la ruta teniendo en cuenta la capacidad de los vehiculos 
+## **dijkstra_mas_corto**
+```plaintext
+INICIO dijkstra_mas_corto(grafo, inicio, destino)
+
+    // Utilizar el algoritmo de Dijkstra para encontrar el camino más corto
+    camino_mas_corto ← calcular_camino_mas_corto(grafo, inicio, destino, peso='costo')
+
+    RETORNAR camino_mas_corto
+
+FIN dijkstra_mas_corto
+```
+## **encontrar_arco_mas_cercano**
+```plaintext
+INICIO encontrar_arco_mas_cercano(grafo, nodo_actual, arcos_pendientes)
+
+    min_costo ← ∞  // Inicializar el costo mínimo con un valor muy alto
+    arcos_candidatos ← []  // Lista para almacenar arcos con el menor costo encontrado
+
+    // Encontrar el menor costo posible desde nodo_actual a los extremos de los arcos pendientes
+    PARA CADA (u, v, data) EN arcos_pendientes HACER
+        costo ← calcular_costo_mínimo(grafo, nodo_actual, u)
+        SI costo < min_costo ENTONCES
+            min_costo ← costo
+        FIN SI
+    FIN PARA
+
+    // Guardar solo los arcos que tienen el menor costo encontrado
+    PARA CADA (u, v, data) EN arcos_pendientes HACER
+        costo ← calcular_costo_mínimo(grafo, nodo_actual, u)
+        SI costo == min_costo ENTONCES
+            AGREGAR (u, v, data) A arcos_candidatos
+        FIN SI
+    FIN PARA
+
+    // Buscar si hay un arco donde el nodo inicial sea nodo_actual
+    PARA i, (u, v, data) EN arcos_pendientes HACER
+        SI (u, v, data) ESTÁ EN arcos_candidatos Y u == nodo_actual ENTONCES
+            RETORNAR (i, (u, v, data))  // Priorizar el arco con nodo_actual como inicio
+        FIN SI
+    FIN PARA
+
+    // Si no hay un arco con nodo_actual como inicio, elegir cualquiera de los mejores candidatos
+    PARA i, (u, v, data) EN arcos_pendientes HACER
+        SI (u, v, data) ESTÁ EN arcos_candidatos ENTONCES
+            RETORNAR (i, (u, v, data))  // Devuelve el primero encontrado
+        FIN SI
+    FIN PARA
+
+FIN encontrar_arco_mas_cercano
+```
+## **construir_ruta**
+```plaintext
 INICIO construir_rutas(grafo, capacidad, deposito)
+    
     inicio_tiempo ← obtener_tiempo_actual()
 
     // Ordenar arcos por costo ascendente
@@ -71,4 +127,4 @@ INICIO construir_rutas(grafo, capacidad, deposito)
 
     RETORNAR rutas, costos, tiempo_ejecucion
 FIN
-
+```
